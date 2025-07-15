@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
 import random
+import re
 
 
 def kuhn_poker_parse_available_actions(observation: str):
@@ -74,19 +74,23 @@ def simple_negotiation_parse_available_actions(observation: str):
             remaining_text = observation[offer_position:]
 
             if not re.search(r"(accepted|denied|implicitly denied)", remaining_text):
-                valid_actions.extend([
-                    "[Accept]",
-                    "[Deny]",
-                    "That sounds good to me. [Accept]",
-                    "I'll pass on this offer. [Deny]"
-                ])
+                valid_actions.extend(
+                    [
+                        "[Accept]",
+                        "[Deny]",
+                        "That sounds good to me. [Accept]",
+                        "I'll pass on this offer. [Deny]",
+                    ]
+                )
 
     if resources and len(resources) >= 2:
         resource_names = list(resources.keys())
 
         for _ in range(3):
             offer_resource = random.choice(resource_names)
-            request_resource = random.choice([r for r in resource_names if r != offer_resource])
+            request_resource = random.choice(
+                [r for r in resource_names if r != offer_resource]
+            )
 
             max_offer = min(3, resources[offer_resource])
             if max_offer > 0:

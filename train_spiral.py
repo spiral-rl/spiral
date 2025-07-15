@@ -62,7 +62,9 @@ INVALID_ACTION = "[｜INVALID_ACTION｜]"
 @dataclass
 class SelfPlayArgs(PPOArgs):
     # Environment settings
-    env_id: Literal["TicTacToe-v0", "KuhnPoker-v1", "SimpleNegotiation-v1"] = "KuhnPoker-v1"
+    env_id: Literal["TicTacToe-v0", "KuhnPoker-v1", "SimpleNegotiation-v1"] = (
+        "KuhnPoker-v1"
+    )
     use_llm_obs_wrapper: bool = True  # Encode opponent history in the obs
 
     # Self-play specific settings
