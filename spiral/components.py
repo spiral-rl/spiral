@@ -15,7 +15,9 @@
 """Implement components defined by Oat, but not critical for our self-play framework."""
 
 import functools
+import logging
 import time
+from itertools import accumulate
 from multiprocessing import Pool
 from typing import Any, List, Tuple
 
@@ -25,7 +27,7 @@ import tree
 from oat.actors.base import ActorBase
 from oat.collectors import FeedbackCollector
 from oat.oracles.base import PreferenceOracleBase, RewardOracleBase
-from oat.types import Metric, TrajectoryData
+from oat.types import Metric, TransitionData
 from oat.utils.ipc import PlasmaShmClient
 from oat.utils.math_grader import boxed_reward_fn
 from torch.utils.data import Dataset
@@ -110,26 +112,58 @@ class SelfPlayCollector(FeedbackCollector):
         Returns:
             Tuple of (feedback_data, metrics)
         """
-        del prompts, formatted_prompts, refs, same_actor_group
+        del prompts, formatted_prompts, refs
+
         st_time = time.time()
 
         # Select actor based on rank (in distributed setting)
-        rank = 0
-        if torch.distributed.is_initialized():
-            rank = torch.distributed.get_rank()
-        actor = self.actors[rank % len(self.actors)]
+        rank = torch.distributed.get_rank()
+        actor = self.actors[(rank // self.args.num_gpus_per_actor) % len(self.actors)]
+        logging.info(
+            f"Learner {rank} local actor rank: {(rank // self.args.num_gpus_per_actor) % len(self.actors)}"
+        )
 
-        # Get trajectories from the actor
-        handle = actor.step()  # No arguments needed as environment provides prompts
-        feedback_data = self.ipc_client.deserialize_ipc(handle)
+        if torch.distributed.get_rank(same_actor_group) == 0:
+            # Get trajectories from the actor
+            handle = actor.step(
+                ["dummy"]
+                * (
+                    self.args.rollout_batch_size_per_device
+                    * self.args.num_gpus_per_actor
+                )
+            )  # No arguments needed as environment provides prompts
+            feedback_data = self.ipc_client.deserialize_ipc(handle)
+            logging.info(
+                f"Group Leader Learner {rank} feedback_data size: {len(feedback_data)}"
+            )
+            rank_lengths = [
+                self.args.rollout_batch_size_per_device
+            ] * self.args.num_gpus_per_actor
+            assert len(feedback_data) == sum(rank_lengths)
+            feedback_data = [
+                feedback_data[i:j]
+                for i, j in zip(
+                    [0] + list(accumulate(rank_lengths)), accumulate(rank_lengths)
+                )
+            ]
+        else:
+            feedback_data = None
 
-        # Calculate metrics
+        scattered_feedback_data = [None]
+        torch.distributed.scatter_object_list(
+            scattered_feedback_data, feedback_data, group=same_actor_group, group_src=0
+        )
+        scattered_feedback_data = scattered_feedback_data[0]
+        logging.info(
+            f"Learner {rank} scattered_feedback_data size: {len(scattered_feedback_data)}"
+        )
+
         actor_time = time.time() - st_time
-        metrics = self._get_metrics(actor_time, feedback_data)
+        return scattered_feedback_data, self._get_metrics(
+            actor_time, scattered_feedback_data
+        )
 
-        return feedback_data, metrics
-
-    def _get_metrics(self, actor_time: float, feedback_data: List[TrajectoryData]):
+    def _get_metrics(self, actor_time: float, feedback_data: List[TransitionData]):
         """Extract and calculate metrics from the collected data."""
         metrics = {
             "actor/total_time": actor_time,
