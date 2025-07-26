@@ -52,7 +52,7 @@ conda create -y -n spiral python=3.10
 conda activate spiral
 
 # install dependencies
-pip install vllm==0.8.4 && pip install oat-llm==0.1.3.post1
+pip install vllm==0.8.4 && pip install oat-llm==0.2.0
 pip install -e .
 ```
 
