@@ -35,7 +35,7 @@ def apply_qwen3_general_template(
     )
 
 
-def apply_octothinker_template(observation: str, system_prompt: Optional[str] = None) -> str:
+def apply_r1_template(observation: str, system_prompt: Optional[str] = None) -> str:
     """OctoThinker template for game-based tasks."""
     del system_prompt
     return (
@@ -48,7 +48,7 @@ def apply_octothinker_template(observation: str, system_prompt: Optional[str] = 
     )
 
 
-def apply_octothinker_general_template(observation: str, system_prompt: Optional[str] = None) -> str:
+def apply_r1_general_template(observation: str, system_prompt: Optional[str] = None) -> str:
     """OctoThinker template for general reasoning tasks."""
     del system_prompt
     return (
@@ -61,39 +61,10 @@ def apply_octothinker_general_template(observation: str, system_prompt: Optional
     )
 
 
-def apply_octothinker_enforce_thinking_template(observation: str, system_prompt: Optional[str] = None) -> str:
-    """OctoThinker template for games with enforced <think> tags."""
-    del system_prompt
-    return (
-        f"A conversation between User and Assistant. The User presents the observation of a zero-sum game, and the Assistant makes a valid action in order to win. "
-        f"The Assistant first thinks about the reasoning process in the mind and then provides the action. "
-        f"User: The reasoning process must be enclosed within <think> </think> tags. "
-        f"Then you must put your answer inside \\boxed{{}} "
-        f"and your final answer will be extracted automatically by the \\boxed{{}} tag.\n"
-        f"Observation: {observation}\n"
-        f"Assistant: <think>"
-    )
-
-
-def apply_octothinker_enforce_thinking_general_template(observation: str, system_prompt: Optional[str] = None) -> str:
-    """OctoThinker template for general reasoning with enforced <think> tags."""
-    del system_prompt
-    return (
-        f"A conversation between User and Assistant. The user asks a question, and "
-        f"the Assistant solves it. The assistant first thinks about the reasoning process in the mind and "
-        f"then provides the user with the answer. User: The reasoning process must be enclosed within <think> </think> tags. "
-        f"Then you must put your answer inside \\boxed{{}} "
-        f"and your final answer will be extracted automatically by the \\boxed{{}} tag.\n"
-        f"Question: {observation}\n"
-        f"Assistant: <think>"
-    )
-
 
 TEMPLATE_FACTORY = {
     "qwen3": apply_qwen3_template,
     "qwen3_general": apply_qwen3_general_template,
-    "octothinker": apply_octothinker_template,
-    "octothinker_general": apply_octothinker_general_template,
-    "octothinker_enforce_thinking": apply_octothinker_enforce_thinking_template,
-    "octothinker_enforce_thinking_general": apply_octothinker_enforce_thinking_general_template,
+    "r1": apply_r1_template,
+    "r1_general": apply_r1_general_template,
 }

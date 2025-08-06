@@ -88,13 +88,13 @@ class SelfPlayArgs(PPOArgs):
     eval_opponent_names: List[str] = field(
         default_factory=lambda: ["random", "google/gemini-2.0-flash-lite-001"]
     )
-    eval_prompt_template: Literal["qwen3_general", "octothinker_general", "octothinker_enforce_thinking_general"] = "qwen3_general"
+    eval_prompt_template: Literal["qwen3_general", "r1_general"] = "qwen3_general"
 
     # Dump all game data.
     dump_game_state_every: int = 1
 
     # Template settings
-    prompt_template: Literal["qwen3", "octothinker", "octothinker_enforce_thinking"] = "qwen3"
+    prompt_template: Literal["qwen3", "r1"] = "qwen3"
     # Optional override for specific environments
     prompt_template_overrides: str = ""  # Format: "env1:template1,env2:template2"
 
