@@ -27,7 +27,8 @@ dependencies = [
   "textarena==0.6.4",
   "latex2sympy2",
   "tabulate",
-  "human_eval"
+  "human_eval",
+  "antlr4-python3-runtime==4.13.2"
 ]
 
 [project.urls]

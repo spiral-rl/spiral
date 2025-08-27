@@ -466,6 +466,11 @@ class SelfPlayActor(PPOActor):
             raw_action = outputs[0].outputs[0].text
             prompt_token_ids = outputs[0].prompt_token_ids
             token_ids = outputs[0].outputs[0].token_ids
+            response_logprobs = outputs[0].outputs[0].logprobs
+            response_logprobs = [
+                    item[token_ids[i]].logprob
+                    for i, item in enumerate(response_logprobs)
+                ]
 
             if env_id in ["DontSayIt-v0", "SimpleNegotiation-v1"]:  # DontSayIt-v0 don't have fixed action space
                 clean_action = self.extract_chat_action(raw_action)
@@ -481,6 +486,7 @@ class SelfPlayActor(PPOActor):
                     "prompt_ids": prompt_token_ids,
                     "response": raw_action,
                     "response_ids": token_ids,
+                    "response_logprobs": response_logprobs,
                     "response_is_truncated": response_is_truncated,
                 }
             )
@@ -558,8 +564,8 @@ class SelfPlayActor(PPOActor):
                         prompt_ids=step_data["prompt_ids"],
                         response=step_data["response"],
                         response_ids=step_data["response_ids"],
-                        response_logprobs=None,  # Re-calculated on learner side.
-                        # response_logprobs=step_data["response_logprobs"],
+                        # response_logprobs=None,  # Re-calculated on learner side.
+                        response_logprobs=step_data["response_logprobs"],
                         rewards=dense_rewards,
                         loss_mask=(
                             not step_data["response_is_truncated"]
