@@ -60,11 +60,25 @@ def apply_r1_general_template(observation: str, system_prompt: Optional[str] = N
         f"Assistant:"
     )
 
+def apply_llama_instruct_template(observation: str, system_prompt: Optional[str] = None) -> str:
+    system_message = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are playing a two-player zero-sum game. Make valid actions to win.<|eot_id|>"
+    user_message = f"<|start_header_id|>user<|end_header_id|>\n\nCurrent Observation: {observation}\nPlease reason step by step, and put your final answer within \\boxed{{}}.<|eot_id|>\n"
+    assistant_start = "<|start_header_id|>assistant<|end_header_id|>"
+    
+    return system_message + user_message + assistant_start
 
+def apply_llama_instruct_general_template(observation: str, system_prompt: Optional[str] = None) -> str:
+    system_message = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|>"
+    user_message = f"<|start_header_id|>user<|end_header_id|>\n\nQuestion: {observation}\nPlease reason step by step, and put your final answer within \\boxed{{}}.<|eot_id|>\n"
+    assistant_start = "<|start_header_id|>assistant<|end_header_id|>"
+    
+    return system_message + user_message + assistant_start
 
 TEMPLATE_FACTORY = {
     "qwen3": apply_qwen3_template,
     "qwen3_general": apply_qwen3_general_template,
     "r1": apply_r1_template,
     "r1_general": apply_r1_general_template,
+    "llama_instruct": apply_llama_instruct_template,
+    "llama_instruct_general": apply_llama_instruct_general_template,
 }
