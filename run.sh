@@ -23,8 +23,8 @@ export LP_LOG_LEVEL=DEBUG
 # Set `--eval_opponent_names google/gemini-2.0-flash-lite-001` if you have OpenRouter access.
 
 python train_spiral.py \
-    --env_id KuhnPoker-v1 \
-    --use_llm_obs_wrapper \
+    --env_ids KuhnPoker-v1 \
+    --use_llm_obs_wrappers \
     --eval_env_ids TicTacToe-v0 KuhnPoker-v1 \
     --eval_use_llm_obs_wrappers False True \
     --eval_split all \
