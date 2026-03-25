@@ -42,7 +42,25 @@ bash cmd/tinker/run_tinker_qwen3_4b.sh
 bash cmd/tinker/run_tinker_llama_8b.sh
 ```
 
-Both scripts accept overrides via environment variables:
+**GPT-OSS-20B (reasoning MoE, small):**
+
+```bash
+bash cmd/tinker/run_tinker_gpt_oss_20b.sh
+```
+
+**GPT-OSS-120B (reasoning MoE, medium):**
+
+```bash
+bash cmd/tinker/run_tinker_gpt_oss_120b.sh
+```
+
+**Qwen3-8B-Base:**
+
+```bash
+bash cmd/tinker/run_tinker_qwen3_8b_base.sh
+```
+
+All scripts accept overrides via environment variables:
 
 ```bash
 BATCH_SIZE=64 LR=1e-4 ENV_IDS=KuhnPoker-v1 bash cmd/tinker/run_tinker_qwen3_4b.sh

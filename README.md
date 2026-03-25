@@ -112,6 +112,16 @@ export OPENROUTER_API_KEY=your_openrouter_key
 bash cmd/tinker/run_tinker_qwen3_4b.sh
 ```
 
+### Supported Models
+
+| Model | Script | Renderer | Notes |
+|-------|--------|----------|-------|
+| Qwen3-4B-Instruct | `cmd/tinker/run_tinker_qwen3_4b.sh` | `qwen3` | Recommended for quick experiments |
+| Llama-3-8B | `cmd/tinker/run_tinker_llama_8b.sh` | `llama_instruct` | |
+| GPT-OSS-20B | `cmd/tinker/run_tinker_gpt_oss_20b.sh` | `gpt_oss` | Reasoning MoE (small) |
+| GPT-OSS-120B | `cmd/tinker/run_tinker_gpt_oss_120b.sh` | `gpt_oss` | Reasoning MoE (medium), lower batch/LR |
+| Qwen3-8B-Base | `cmd/tinker/run_tinker_qwen3_8b_base.sh` | `qwen3_base` | Base (non-instruct) model |
+
 See [docs/TINKER.md](docs/TINKER.md) for full documentation including architecture details, hyperparameters, and advanced usage. For more information on the Tinker framework, see the [tinker-cookbook](https://github.com/tinker-engine/tinker-cookbook) repository.
 
 ## Citation
