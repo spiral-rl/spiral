@@ -93,6 +93,27 @@ cd evals/benchmarks
 bash batch_run.sh
 ```
 
+## Tinker Training
+
+SPIRAL now supports training with [Thinking Machine](https://thinkingmachine.ai/)'s **Tinker** distributed training framework. The `tinker/` addon provides a simplified synchronous training loop — no population-based self-play (FSP) or async actor-learner needed.
+
+### Quick Start
+
+```bash
+# Install with Tinker dependencies
+pip install -e ".[tinker]"
+
+# Set required environment variables
+export TINKER_API_KEY=your_tinker_key
+export WANDB_API_KEY=your_wandb_key
+export OPENROUTER_API_KEY=your_openrouter_key
+
+# Run training (Qwen3-4B)
+bash cmd/tinker/run_tinker_qwen3_4b.sh
+```
+
+See [docs/TINKER.md](docs/TINKER.md) for full documentation including architecture details, hyperparameters, and advanced usage. For more information on the Tinker framework, see the [tinker-cookbook](https://github.com/tinker-engine/tinker-cookbook) repository.
+
 ## Citation
 
 If you find our work useful for your research, please consider citing:
@@ -108,6 +129,7 @@ If you find our work useful for your research, please consider citing:
 
 ## Acknowledgement
 * This work is supported by [PlasticLabs](https://plasticlabs.ai/) and [Sea AI Lab](https://sail.sea.com/) for computing resources.
+* We thank [Thinking Machine](https://thinkingmachine.ai/) for providing compute credits for Tinker experiments.
 * The language games are sampled from [TextArena](https://github.com/LeonGuertler/TextArena), a collection of competitive text-based games for language model evaluation and reinforcement learning.
 * The multi-agent, multi-turn RL training is implemented with 🌾 [Oat](https://github.com/sail-sg/oat), a modular and research-friendly LLM RL framework.
 * We did exploration on PEFT experiments using [UnstableBaselines](https://github.com/LeonGuertler/UnstableBaselines), a lightweight, LoRA-first library for fast prototyping of self-play algorithms on TextArena.
