@@ -31,10 +31,20 @@ dependencies = [
   "antlr4-python3-runtime==4.13.2"
 ]
 
+[project.optional-dependencies]
+tinker = [
+  "tinker",
+  "tinker-cookbook",
+  "chz",
+]
+
 [project.urls]
 Documentation = "https://github.com/spiral-ai/spiral#readme"
 Issues = "https://github.com/spiral-ai/spiral/issues"
 Source = "https://github.com/spiral-ai/spiral"
+
+[tool.hatch.build.targets.wheel]
+packages = ["spiral", "tinker"]
 
 [tool.hatch.version]
 path = "spiral/__about__.py"
